@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Shell/build artifacts
+*.log
+*.tmp
+*.bak
+
+# Media outputs created by this tool (optional - remove if you want sample outputs tracked)
+*.gif
