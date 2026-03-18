@@ -65,22 +65,22 @@ cp "$SCRIPT_DIR/VIDEO_TO_SLIDES_GUIDE.md" "$LIB_DIR/VIDEO_TO_SLIDES_GUIDE.md"
 
 cat > "$LIB_DIR/quick_action_small.zsh" <<'EOF'
 #!/bin/zsh
-VIDEO_TO_SLIDES_GIF_WIDTH="800" "/usr/local/lib/video-to-slides-gif/video_to_slides_gif_finder.sh" "$@"
+VIDEO_TO_SLIDES_GIF_WIDTH="800" VIDEO_TO_SLIDES_GIF_LABEL="small" "/usr/local/lib/video-to-slides-gif/video_to_slides_gif_finder.sh" "$@"
 EOF
 
 cat > "$LIB_DIR/quick_action_medium.zsh" <<'EOF'
 #!/bin/zsh
-VIDEO_TO_SLIDES_GIF_WIDTH="1200" "/usr/local/lib/video-to-slides-gif/video_to_slides_gif_finder.sh" "$@"
+VIDEO_TO_SLIDES_GIF_WIDTH="1200" VIDEO_TO_SLIDES_GIF_LABEL="medium" "/usr/local/lib/video-to-slides-gif/video_to_slides_gif_finder.sh" "$@"
 EOF
 
 cat > "$LIB_DIR/quick_action_large.zsh" <<'EOF'
 #!/bin/zsh
-VIDEO_TO_SLIDES_GIF_WIDTH="1600" "/usr/local/lib/video-to-slides-gif/video_to_slides_gif_finder.sh" "$@"
+VIDEO_TO_SLIDES_GIF_WIDTH="1600" VIDEO_TO_SLIDES_GIF_LABEL="large" "/usr/local/lib/video-to-slides-gif/video_to_slides_gif_finder.sh" "$@"
 EOF
 
 cat > "$LIB_DIR/quick_action_max.zsh" <<'EOF'
 #!/bin/zsh
-VIDEO_TO_SLIDES_GIF_WIDTH="1920" "/usr/local/lib/video-to-slides-gif/video_to_slides_gif_finder.sh" "$@"
+VIDEO_TO_SLIDES_GIF_WIDTH="1920" VIDEO_TO_SLIDES_GIF_LABEL="max" "/usr/local/lib/video-to-slides-gif/video_to_slides_gif_finder.sh" "$@"
 EOF
 
 chmod 755 \

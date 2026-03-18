@@ -26,7 +26,7 @@ cd /path/to/video-to-gif-script
 
 Default behavior:
 - Output is written next to the input file
-- Output name matches input basename with `.gif`
+- CLI output name matches input basename with `.gif`
 - Example: `input.mp4` -> `input.gif`
 
 ## 3. Usage
@@ -114,8 +114,8 @@ See built-in help anytime:
 
 This setup lets you right-click a video in Finder and generate a GIF:
 - In the same folder as the video
-- With the same basename as the video (`clip.mp4` -> `clip.gif`)
-- With automatic fallback naming on conflict (`clip_1.gif`, `clip_2.gif`, ...)
+- With the preset name appended to the GIF (`clip.mp4` -> `clip_small.gif`)
+- With automatic fallback naming on conflict (`clip_small_1.gif`, `clip_small_2.gif`, ...)
 - With one-click size presets for common export widths
 
 Install it with:

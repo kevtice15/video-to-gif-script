@@ -4,6 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONVERTER="$SCRIPT_DIR/video_to_slides_gif.sh"
 WIDTH="${VIDEO_TO_SLIDES_GIF_WIDTH:-1200}"
+SIZE_LABEL="${VIDEO_TO_SLIDES_GIF_LABEL:-}"
 LOG_DIR="${HOME}/Library/Logs/video-to-slides-gif"
 LOG_FILE="${LOG_DIR}/finder.log"
 STDIN_CAPTURE=""
@@ -26,7 +27,7 @@ notify() {
   fi
 }
 
-log "Quick Action start width=${WIDTH:-original} args=$#"
+log "Quick Action start width=${WIDTH:-original} label=${SIZE_LABEL:-none} args=$#"
 log "PWD=${PWD}"
 log "PATH=${PATH}"
 
@@ -71,26 +72,47 @@ for input in "${INPUTS[@]}"; do
 
   output_dir="$(dirname "$input")"
   base_name="$(basename "$input")"
+  stem="${base_name%.*}"
+  output_path=""
   log "Processing file in directory: $output_dir"
 
-  # Do not pass explicit output:
-  # converter defaults to input directory + same basename + .gif,
-  # while preserving conflict fallback naming.
+  if [[ -n "$SIZE_LABEL" ]]; then
+    output_path="${output_dir}/${stem}_${SIZE_LABEL}.gif"
+  fi
+
   if [[ -n "$WIDTH" ]]; then
-    if "$CONVERTER" --verbose -w "$WIDTH" "$input" >>"$LOG_FILE" 2>&1; then
-      log "SUCCESS width=$WIDTH input=$input"
+    if [[ -n "$output_path" ]]; then
+      if "$CONVERTER" --verbose -w "$WIDTH" "$input" "$output_path" >>"$LOG_FILE" 2>&1; then
+        log "SUCCESS width=$WIDTH label=${SIZE_LABEL:-none} input=$input output=$output_path"
+        notify "Finished: ${stem}_${SIZE_LABEL}.gif"
+      else
+        log "ERROR conversion failed width=$WIDTH label=${SIZE_LABEL:-none} input=$input output=$output_path"
+        notify "Conversion failed. Check ~/Library/Logs/video-to-slides-gif/finder.log"
+        exit 1
+      fi
+    elif "$CONVERTER" --verbose -w "$WIDTH" "$input" >>"$LOG_FILE" 2>&1; then
+      log "SUCCESS width=$WIDTH label=${SIZE_LABEL:-none} input=$input"
       notify "Finished: ${base_name%.*}.gif"
     else
-      log "ERROR conversion failed width=$WIDTH input=$input"
+      log "ERROR conversion failed width=$WIDTH label=${SIZE_LABEL:-none} input=$input"
       notify "Conversion failed. Check ~/Library/Logs/video-to-slides-gif/finder.log"
       exit 1
     fi
   else
-    if "$CONVERTER" --verbose "$input" >>"$LOG_FILE" 2>&1; then
-      log "SUCCESS width=original input=$input"
+    if [[ -n "$output_path" ]]; then
+      if "$CONVERTER" --verbose "$input" "$output_path" >>"$LOG_FILE" 2>&1; then
+        log "SUCCESS width=original label=${SIZE_LABEL:-none} input=$input output=$output_path"
+        notify "Finished: ${stem}_${SIZE_LABEL}.gif"
+      else
+        log "ERROR conversion failed width=original label=${SIZE_LABEL:-none} input=$input output=$output_path"
+        notify "Conversion failed. Check ~/Library/Logs/video-to-slides-gif/finder.log"
+        exit 1
+      fi
+    elif "$CONVERTER" --verbose "$input" >>"$LOG_FILE" 2>&1; then
+      log "SUCCESS width=original label=${SIZE_LABEL:-none} input=$input"
       notify "Finished: ${base_name%.*}.gif"
     else
-      log "ERROR conversion failed width=original input=$input"
+      log "ERROR conversion failed width=original label=${SIZE_LABEL:-none} input=$input"
       notify "Conversion failed. Check ~/Library/Logs/video-to-slides-gif/finder.log"
       exit 1
     fi

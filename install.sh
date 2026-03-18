@@ -104,7 +104,7 @@ create_quick_action() {
 
   cat > "$launcher" <<EOF
 #!/bin/zsh
-VIDEO_TO_SLIDES_GIF_WIDTH="$width" "$PREFIX/video_to_slides_gif_finder.sh" "\$@"
+VIDEO_TO_SLIDES_GIF_WIDTH="$width" VIDEO_TO_SLIDES_GIF_LABEL="$label" "$PREFIX/video_to_slides_gif_finder.sh" "\$@"
 EOF
   chmod +x "$launcher"
 

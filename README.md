@@ -7,8 +7,9 @@ Convert videos into Google-Slides-friendly GIFs from:
 ## Features
 
 - Good quality/size defaults for slides (`fps=10`, `width=800`, `colors=128`)
-- Output next to source video by default (`clip.mp4 -> clip.gif`)
-- Collision-safe naming (`clip_1.gif`, `clip_2.gif`, ...)
+- Output next to source video by default
+- Quick Action outputs include the preset name (`clip_small.gif`, `clip_medium.gif`, `clip_large.gif`, `clip_max.gif`)
+- Collision-safe naming (`clip_small_1.gif`, `clip_small_2.gif`, ...)
 - Optional `gifsicle` optimization if installed
 - Finder Quick Action presets: Small `800`, Medium `1200`, Large `1600`, Max `1920`
 
