@@ -4,7 +4,6 @@ set -euo pipefail
 APP_NAME="video-to-slides-gif"
 DEFAULT_PREFIX="$HOME/Scripts/$APP_NAME"
 PREFIX="$DEFAULT_PREFIX"
-WIDTH="1200"
 INSTALL_DEPS=0
 
 usage() {
@@ -14,14 +13,13 @@ Usage:
 
 Options:
   --prefix DIR          Install directory (default: ~/Scripts/video-to-slides-gif)
-  --width PX            Finder Quick Action width (default: 1200)
   --install-deps        Install ffmpeg (+ gifsicle) via Homebrew if missing
   -h, --help            Show this help
 
 This installer:
   1) Copies scripts to the install directory
   2) Makes scripts executable
-  3) Creates a Quick Action snippet file to paste into Automator
+  3) Installs Finder Quick Actions automatically
 USAGE
 }
 
@@ -29,10 +27,6 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --prefix)
       PREFIX="$2"
-      shift 2
-      ;;
-    --width)
-      WIDTH="$2"
       shift 2
       ;;
     --install-deps)
@@ -56,18 +50,17 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
   exit 1
 fi
 
-if [[ ! "$WIDTH" =~ ^[1-9][0-9]*$ ]]; then
-  echo "Error: --width must be a positive integer." >&2
-  exit 1
-fi
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 mkdir -p "$PREFIX"
 cp "$SCRIPT_DIR/video_to_slides_gif.sh" "$PREFIX/video_to_slides_gif.sh"
 cp "$SCRIPT_DIR/video_to_slides_gif_finder.sh" "$PREFIX/video_to_slides_gif_finder.sh"
+cp "$SCRIPT_DIR/create_quick_action.sh" "$PREFIX/create_quick_action.sh"
 cp "$SCRIPT_DIR/VIDEO_TO_SLIDES_GUIDE.md" "$PREFIX/VIDEO_TO_SLIDES_GUIDE.md"
-chmod +x "$PREFIX/video_to_slides_gif.sh" "$PREFIX/video_to_slides_gif_finder.sh"
+chmod +x \
+  "$PREFIX/video_to_slides_gif.sh" \
+  "$PREFIX/video_to_slides_gif_finder.sh" \
+  "$PREFIX/create_quick_action.sh"
 
 if [[ "$INSTALL_DEPS" -eq 1 ]]; then
   if command -v brew >/dev/null 2>&1; then
@@ -90,30 +83,62 @@ if ! command -v gifsicle >/dev/null 2>&1; then
   echo "Note: gifsicle not found. Optional install for smaller GIFs: brew install gifsicle" >&2
 fi
 
-QUICK_ACTION_SNIPPET="$PREFIX/quick_action_run.zsh"
-cat > "$QUICK_ACTION_SNIPPET" <<EOF
+create_quick_action() {
+  local label="$1"
+  local width="$2"
+  local launcher="$PREFIX/quick_action_${label}.zsh"
+  local display_label=""
+  local action_name=""
+  local workflow_path=""
+
+  case "$label" in
+    small) display_label="Small" ;;
+    medium) display_label="Medium" ;;
+    large) display_label="Large" ;;
+    max) display_label="Max" ;;
+    *) echo "Error: unknown Quick Action label: $label" >&2; exit 1 ;;
+  esac
+
+  action_name="Video to Slides GIF - $display_label"
+  workflow_path="$HOME/Library/Services/${action_name}.workflow"
+
+  cat > "$launcher" <<EOF
 #!/bin/zsh
-VIDEO_TO_SLIDES_GIF_WIDTH="$WIDTH" "$PREFIX/video_to_slides_gif_finder.sh" "\$@"
+VIDEO_TO_SLIDES_GIF_WIDTH="$width" "$PREFIX/video_to_slides_gif_finder.sh" "\$@"
 EOF
-chmod +x "$QUICK_ACTION_SNIPPET"
+  chmod +x "$launcher"
+
+  "$PREFIX/create_quick_action.sh" \
+    --launcher "$launcher" \
+    --workflow-path "$workflow_path" \
+    --name "$action_name"
+}
+
+create_quick_action "small" "800"
+create_quick_action "medium" "1200"
+create_quick_action "large" "1600"
+create_quick_action "max" "1920"
+
+if [[ -x /System/Library/CoreServices/pbs ]]; then
+  /System/Library/CoreServices/pbs -update >/dev/null 2>&1 || true
+fi
 
 cat <<EOF
 Installed $APP_NAME to:
   $PREFIX
 
-Next: create Finder Quick Action in Automator:
-  1) New Quick Action
-  2) Workflow receives current: movie files
-  3) In: Finder
-  4) Add "Run Shell Script" with:
-     - Shell: /bin/zsh
-     - Pass input: as arguments
-  5) Paste this line:
-     "$QUICK_ACTION_SNIPPET" "\$@"
-  6) Save as: Video to Slides GIF
+Installed Finder Quick Actions:
+  $HOME/Library/Services/Video to Slides GIF - Small.workflow
+  $HOME/Library/Services/Video to Slides GIF - Medium.workflow
+  $HOME/Library/Services/Video to Slides GIF - Large.workflow
+  $HOME/Library/Services/Video to Slides GIF - Max.workflow
 
 Notes:
-  - Finder width is set to $WIDTH px (change by re-running install.sh --width N)
+  - Small = 800 px
+  - Medium = 1200 px
+  - Large = 1600 px
+  - Max = 1920 px
   - Core CLI script remains available at:
     $PREFIX/video_to_slides_gif.sh
+  - If the Quick Actions do not appear immediately, relaunch Finder once
 EOF

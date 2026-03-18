@@ -13,6 +13,7 @@
 *.log
 *.tmp
 *.bak
+dist/
 
 # Media outputs created by this tool (optional - remove if you want sample outputs tracked)
 *.gif

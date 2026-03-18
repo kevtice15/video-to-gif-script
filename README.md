@@ -10,7 +10,7 @@ Convert videos into Google-Slides-friendly GIFs from:
 - Output next to source video by default (`clip.mp4 -> clip.gif`)
 - Collision-safe naming (`clip_1.gif`, `clip_2.gif`, ...)
 - Optional `gifsicle` optimization if installed
-- Finder wrapper with larger default width for sharper presentation GIFs
+- Finder Quick Action presets: Small `800`, Medium `1200`, Large `1600`, Max `1920`
 
 ## Requirements
 
@@ -37,15 +37,21 @@ chmod +x ./install.sh ./uninstall.sh
 Common install options:
 
 ```bash
-./install.sh --width 1400
 ./install.sh --install-deps
 ./install.sh --prefix "$HOME/Tools/video-to-slides-gif"
+./build-pkg.sh --version 1.0.0
 ```
 
 Installer output:
 - Copies scripts to `~/Scripts/video-to-slides-gif` (or your custom prefix)
 - Makes scripts executable
-- Creates `quick_action_run.zsh` for Automator
+- Creates four Quick Action launchers
+- Installs four workflows under `~/Library/Services`
+
+Package build output:
+- Creates an unsigned `.pkg` in `./dist`
+- Installs scripts to `/usr/local/lib/video-to-slides-gif`
+- Installs the Finder Quick Action for the logged-in user at package install time
 
 ## CLI Usage
 
@@ -63,21 +69,38 @@ Examples:
 ./video_to_slides_gif.sh --verbose demo.mp4
 ```
 
-## Finder Quick Action Setup
+## Finder Quick Actions
 
-After install, create an Automator Quick Action:
-1. `Workflow receives current`: `movie files`
-2. `In`: `Finder`
-3. Add action: `Run Shell Script`
-4. Set `Shell`: `/bin/zsh`
-5. Set `Pass input`: `as arguments`
-6. Paste:
+`install.sh` now installs these Quick Actions automatically:
 
-```zsh
-"$HOME/Scripts/video-to-slides-gif/quick_action_run.zsh" "$@"
+```text
+~/Library/Services/Video to Slides GIF - Small.workflow
+~/Library/Services/Video to Slides GIF - Medium.workflow
+~/Library/Services/Video to Slides GIF - Large.workflow
+~/Library/Services/Video to Slides GIF - Max.workflow
 ```
 
-7. Save as `Video to Slides GIF`
+If it does not appear right away in Finder, relaunch Finder once.
+
+Resolution presets:
+- `Small`: `800px`
+- `Medium`: `1200px`
+- `Large`: `1600px`
+- `Max`: `1920px`
+
+## Build A macOS Installer
+
+Create a double-clickable `.pkg`:
+
+```bash
+chmod +x ./build-pkg.sh
+./build-pkg.sh --version 1.0.0
+```
+
+The generated package:
+- installs scripts under `/usr/local/lib/video-to-slides-gif`
+- adds a CLI symlink at `/usr/local/bin/video-to-slides-gif`
+- creates the four Quick Actions for the logged-in user during install
 
 ## Uninstall
 
@@ -85,8 +108,11 @@ After install, create an Automator Quick Action:
 ./uninstall.sh
 ```
 
-If you created the Quick Action, also delete:
-- `~/Library/Services/Video to Slides GIF.workflow`
+This also removes:
+- `~/Library/Services/Video to Slides GIF - Small.workflow`
+- `~/Library/Services/Video to Slides GIF - Medium.workflow`
+- `~/Library/Services/Video to Slides GIF - Large.workflow`
+- `~/Library/Services/Video to Slides GIF - Max.workflow`
 
 ## Project Docs
 

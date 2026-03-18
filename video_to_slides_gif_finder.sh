@@ -24,5 +24,9 @@ for input in "$@"; do
   # Do not pass explicit output:
   # converter defaults to input directory + same basename + .gif,
   # while preserving conflict fallback naming.
-  "$CONVERTER" -w "$WIDTH" "$input"
+  if [[ -n "$WIDTH" ]]; then
+    "$CONVERTER" -w "$WIDTH" "$input"
+  else
+    "$CONVERTER" "$input"
+  fi
 done

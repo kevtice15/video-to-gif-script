@@ -116,33 +116,32 @@ This setup lets you right-click a video in Finder and generate a GIF:
 - In the same folder as the video
 - With the same basename as the video (`clip.mp4` -> `clip.gif`)
 - With automatic fallback naming on conflict (`clip_1.gif`, `clip_2.gif`, ...)
-- With higher resolution than default CLI runs (Finder wrapper uses `-w 1200`)
+- With one-click size presets for common export widths
 
-Steps:
-
-1. Open `Automator` and create a new `Quick Action`.
-2. Set:
-   - `Workflow receives current`: `movie files`
-   - `in`: `Finder`
-3. Add action: `Run Shell Script`
-4. Set:
-   - `Shell`: `/bin/zsh`
-   - `Pass input`: `as arguments`
-5. Use this script:
-
-```zsh
-"$HOME/Scripts/video-to-slides-gif/quick_action_run.zsh" "$@"
-```
-
-6. Save as: `Video to Slides GIF`
-
-To change Quick Action GIF resolution later, edit:
-- run installer again with a new width:
+Install it with:
 
 ```bash
-./install.sh --width 1400
+./install.sh
 ```
+
+That creates these Quick Actions automatically:
+
+```text
+~/Library/Services/Video to Slides GIF - Small.workflow
+~/Library/Services/Video to Slides GIF - Medium.workflow
+~/Library/Services/Video to Slides GIF - Large.workflow
+~/Library/Services/Video to Slides GIF - Max.workflow
+```
+
+If it does not appear right away in Finder, relaunch Finder once.
+
+Preset meanings:
+- `Small`: `800px`
+- `Medium`: `1200px`
+- `Large`: `1600px`
+- `Max`: `1920px`
 
 Use it in Finder:
 - Select one or more videos
-- Right-click -> `Quick Actions` -> `Video to Slides GIF`
+- Right-click -> `Quick Actions`
+- Pick `Video to Slides GIF - Small`, `Medium`, `Large`, or `Max`
