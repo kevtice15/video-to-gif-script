@@ -25,6 +25,57 @@ brew install ffmpeg
 brew install gifsicle
 ```
 
+## Quick Start
+
+1. Get the project onto your Mac.
+
+```bash
+git clone https://github.com/kevtice15/video-to-gif-script.git
+cd video-to-gif-script
+```
+
+If you downloaded the repo as a ZIP from GitHub, unzip it and open the folder in Terminal instead.
+
+2. Install dependencies.
+
+```bash
+brew install ffmpeg
+brew install gifsicle
+```
+
+3. Choose one setup path.
+
+Option A: install directly from the repo
+
+```bash
+chmod +x ./install.sh ./uninstall.sh
+./install.sh
+```
+
+Option B: build a clickable macOS installer package
+
+```bash
+chmod +x ./build-pkg.sh
+./build-pkg.sh --version 1.0.0
+open ./dist
+```
+
+Then double-click the generated `.pkg`.
+
+4. Use it in Finder.
+
+- Right-click a `.mp4` or `.mov`
+- Open `Quick Actions`
+- Choose `Video to Slides GIF - Small`, `Medium`, `Large`, or `Max`
+
+If the Quick Actions do not appear immediately, run:
+
+```bash
+/System/Library/CoreServices/pbs -flush
+/System/Library/CoreServices/pbs -update
+killall Finder
+```
+
 ## Install
 
 From the project folder:
@@ -51,7 +102,7 @@ Installer output:
 Package build output:
 - Creates an unsigned `.pkg` in `./dist`
 - Installs scripts to `/usr/local/lib/video-to-slides-gif`
-- Installs the Finder Quick Action for the logged-in user at package install time
+- Installs the Finder Quick Actions for the logged-in user at package install time
 
 ## CLI Usage
 
