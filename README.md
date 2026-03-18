@@ -68,6 +68,13 @@ Then double-click the generated `.pkg`.
 - Open `Quick Actions`
 - Choose `Video to Slides GIF - Small`, `Medium`, `Large`, or `Max`
 
+On first use, Finder may hide new Quick Actions until you enable them:
+
+- Right-click a video in Finder
+- Open `Quick Actions`
+- Click `Customize...`
+- Turn on `Video to Slides GIF - Small`, `Medium`, `Large`, and `Max`
+
 If the Quick Actions do not appear immediately, run:
 
 ```bash
@@ -75,6 +82,13 @@ If the Quick Actions do not appear immediately, run:
 /System/Library/CoreServices/pbs -update
 killall Finder
 ```
+
+macOS may also ask for permission to access folders the first time the action runs.
+If no GIF appears, check for a system prompt and allow access for Terminal, the installed script, or `ffmpeg` as needed.
+You may also need to review permissions in:
+
+- `System Settings -> Privacy & Security -> Files and Folders`
+- `System Settings -> Privacy & Security -> Full Disk Access`
 
 ## Install
 
