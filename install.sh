@@ -145,5 +145,11 @@ Notes:
   - Max = 1920 px
   - Core CLI script remains available at:
     $PREFIX/video_to_slides_gif.sh
-  - If the Quick Actions do not appear immediately, relaunch Finder once
+  - If the Quick Actions do not appear immediately, relaunch Finder once:
+    /System/Library/CoreServices/pbs -flush
+    /System/Library/CoreServices/pbs -update
+    killall Finder
+  - On first use, you may need Finder -> Quick Actions -> Customize... to enable:
+    Video to Slides GIF - Small / Medium / Large / Max
+  - macOS may ask for permission to access folders; allow access for the script or ffmpeg if prompted
 EOF
