@@ -12,6 +12,7 @@ Convert videos into Google-Slides-friendly GIFs from:
 - Collision-safe naming (`clip_small_1.gif`, `clip_small_2.gif`, ...)
 - Optional `gifsicle` optimization if installed
 - Finder Quick Action presets: Small `800`, Medium `1200`, Large `1600`, Max `1920`
+- Installer now uses Automator-authored workflow templates instead of generating workflow internals from scratch
 
 ## Requirements
 

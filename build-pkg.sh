@@ -55,13 +55,15 @@ PKG_SCRIPTS="$TMP_DIR/scripts"
 LIB_DIR="$PKG_ROOT$INSTALL_ROOT"
 BIN_DIR="$PKG_ROOT/usr/local/bin"
 PKG_PATH="$OUTPUT_DIR/video-to-slides-gif-${VERSION}.pkg"
+TEMPLATE_DIR="$SCRIPT_DIR/templates/quick_action"
 
-mkdir -p "$LIB_DIR" "$BIN_DIR" "$PKG_SCRIPTS" "$OUTPUT_DIR"
+mkdir -p "$LIB_DIR" "$BIN_DIR" "$PKG_SCRIPTS" "$OUTPUT_DIR" "$LIB_DIR/templates"
 
 cp "$SCRIPT_DIR/video_to_slides_gif.sh" "$LIB_DIR/video_to_slides_gif.sh"
 cp "$SCRIPT_DIR/video_to_slides_gif_finder.sh" "$LIB_DIR/video_to_slides_gif_finder.sh"
 cp "$SCRIPT_DIR/create_quick_action.sh" "$LIB_DIR/create_quick_action.sh"
 cp "$SCRIPT_DIR/VIDEO_TO_SLIDES_GUIDE.md" "$LIB_DIR/VIDEO_TO_SLIDES_GUIDE.md"
+cp -R "$TEMPLATE_DIR" "$LIB_DIR/templates/quick_action"
 
 cat > "$LIB_DIR/quick_action_small.zsh" <<'EOF'
 #!/bin/zsh
@@ -100,6 +102,7 @@ set -euo pipefail
 
 INSTALL_ROOT="/usr/local/lib/video-to-slides-gif"
 CREATE_SCRIPT="$INSTALL_ROOT/create_quick_action.sh"
+TEMPLATE_DIR="$INSTALL_ROOT/templates/quick_action"
 
 console_user="$(stat -f '%Su' /dev/console)"
 if [[ -z "$console_user" || "$console_user" == "root" ]]; then
@@ -118,7 +121,7 @@ create_action() {
   local launcher="$2"
   local workflow_path="$user_home/Library/Services/${name}.workflow"
 
-  "$CREATE_SCRIPT" --launcher "$launcher" --workflow-path "$workflow_path" --name "$name"
+  "$CREATE_SCRIPT" --launcher "$launcher" --template-dir "$TEMPLATE_DIR" --workflow-path "$workflow_path" --name "$name"
   chown -R "$console_user":staff "$workflow_path"
 }
 

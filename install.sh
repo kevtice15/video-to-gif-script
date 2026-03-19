@@ -51,12 +51,16 @@ if [[ "$(uname -s)" != "Darwin" ]]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKFLOW_TEMPLATE_DIR="$SCRIPT_DIR/templates/quick_action"
 
 mkdir -p "$PREFIX"
 cp "$SCRIPT_DIR/video_to_slides_gif.sh" "$PREFIX/video_to_slides_gif.sh"
 cp "$SCRIPT_DIR/video_to_slides_gif_finder.sh" "$PREFIX/video_to_slides_gif_finder.sh"
 cp "$SCRIPT_DIR/create_quick_action.sh" "$PREFIX/create_quick_action.sh"
 cp "$SCRIPT_DIR/VIDEO_TO_SLIDES_GUIDE.md" "$PREFIX/VIDEO_TO_SLIDES_GUIDE.md"
+mkdir -p "$PREFIX/templates"
+rm -rf "$PREFIX/templates/quick_action"
+cp -R "$WORKFLOW_TEMPLATE_DIR" "$PREFIX/templates/quick_action"
 chmod +x \
   "$PREFIX/video_to_slides_gif.sh" \
   "$PREFIX/video_to_slides_gif_finder.sh" \
@@ -110,6 +114,7 @@ EOF
 
   "$PREFIX/create_quick_action.sh" \
     --launcher "$launcher" \
+    --template-dir "$PREFIX/templates/quick_action" \
     --workflow-path "$workflow_path" \
     --name "$action_name"
 }

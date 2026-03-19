@@ -117,6 +117,7 @@ This setup lets you right-click a video in Finder and generate a GIF:
 - With the preset name appended to the GIF (`clip.mp4` -> `clip_small.gif`)
 - With automatic fallback naming on conflict (`clip_small_1.gif`, `clip_small_2.gif`, ...)
 - With one-click size presets for common export widths
+- Using workflow templates copied at install time
 
 Install it with:
 
